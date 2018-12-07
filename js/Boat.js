@@ -74,6 +74,7 @@ class Boat {
     this.crashed = true;
     this.velocity.zero();
     game.view.shake();
+    document.getElementById('status').innerHTML = 'Crash!';
   }
 
   applyFX(dt) {

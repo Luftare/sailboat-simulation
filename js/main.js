@@ -6,6 +6,7 @@ window.onload = () => {
 };
 
 document.getElementById('restart').onclick = () => {
+  document.getElementById('status').innerHTML = '';
   game.loop.stop();
   game = new Game();
   game.start();
