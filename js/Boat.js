@@ -1,14 +1,14 @@
 class Boat {
   constructor({ x = 0, y = -game.zMap.canvas.width / 2 }) {
     this.position = new Vector(x, y);
-    this.velocity = new Vector(0, 0);
+    this.velocity = new Vector(0, 100);
     this.direction = new Vector(0, 1);
     this.forces = [];
     this.crashed = false;
-    this.mass = 3;
+    this.mass = 20;
     this.swimDepth = 20;
     this.keelDepth = 100;
-    this.keelMass = 2000;
+    this.keelMass = 3000;
     this.mastHeight = 80;
     this.tiltAngle = 0;
     this.sailAngle = 0;
@@ -107,7 +107,7 @@ class Boat {
       this.mastHeight *
       this.sailLength *
       0.5
-    ); //triangle shaped sail :)
+    ); //triangle-shaped sail :)
   }
 
   updateDirection(dt) {
@@ -146,7 +146,6 @@ class Boat {
       .clone()
       .normalize()
       .scale(this.bodyDragFactor);
-    this.forces.push(drag);
 
     if (this.sailSlack + this.sailSlackThreshold > 0) {
       const slackDrag = game.state.wind
@@ -155,8 +154,7 @@ class Boat {
         .scale((this.sailSlack + this.sailSlackThreshold) * 3);
       this.forces.push(slackDrag);
     }
-
-    this.forces.push(force);
+    this.forces.push(force, drag);
   }
 
   updateTilt(dt) {
@@ -168,7 +166,8 @@ class Boat {
     const keelTorque =
       this.keelMass * this.keelDepth * Math.sin(this.tiltAngle);
     const torque = windTorque - keelTorque;
-    this.tiltAngle += dt * torque * this.torqueFactor;
+
+    this.tiltAngle += (dt * torque * this.torqueFactor) / this.mass;
   }
 
   updateSailAngle(dt) {
@@ -247,11 +246,11 @@ class Boat {
       this.rudderAngle *= 0.9;
 
     const zoomSpeed = 0.95;
-    if (game.input.keys.z) {
+    if (game.input.keys.z && game.view.camera.zoom > 0.1) {
       game.view.camera.zoom *= zoomSpeed;
       game.view.camera.height *= 1 / zoomSpeed;
     }
-    if (game.input.keys.x) {
+    if (game.input.keys.x && game.view.camera.zoom < 3) {
       game.view.camera.zoom *= 1 / zoomSpeed;
       game.view.camera.height *= zoomSpeed;
     }

@@ -30,6 +30,7 @@ class Radar {
       const width = this.canvas.width / this.sampleCount;
       this.ctx.fillRect(x, y, width, this.canvas.height * 2);
     });
+
     const scale = game.zMap.zToDepth(1);
     const keelY =
       (Math.cos(game.state.self.tiltAngle) * game.state.self.keelDepth) / scale;
