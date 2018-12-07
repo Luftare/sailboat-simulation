@@ -1,0 +1,134 @@
+<style>
+html, body {
+	margin: 0;
+	padding: 0;
+}
+canvas {
+	//position: absolute;
+}
+#canvas {
+	background-color: #AAF;
+}
+#shadow {
+	//display: none;
+	//opacity: 0.1;
+	background-color: gray;
+}
+</style>
+
+<canvas id="canvas"></canvas><br>
+<canvas id="shadow"></canvas>
+<script src="https://rawgit.com/Luftare/Vector/master/Vector.js"></script>
+<script>
+const canvas = document.getElementById("canvas");
+const shadow = document.getElementById("shadow");
+
+shadow.width = 1200;
+shadow.height = 1200;
+canvas.width = 1000;
+canvas.height = 1000;
+const sw = shadow.width / 2;
+const sh = shadow.height / 2;
+
+const ctx = canvas.getContext("2d");
+const stx = shadow.getContext("2d");
+stx.translate(sw, sh);
+
+canvas.addEventListener("mousedown", e => {
+	data = stx.getImageData(e.x + sw, e.y + sh, 1, 1).data;
+	console.log(data)
+});
+
+const generateShape = maxR => {
+	let nodes = [];
+	const count = 15;
+	let r = maxR / 2;
+	let avgR = 0;
+	const startV = (new Vector(1, 0)).random();
+	let controlAngle = (Math.PI * 2 / count) * 0.3;
+	for(let i = 0; i<count;i++){
+		r += (Math.random() - 0.45) * maxR / 3;
+		r = Math.min(maxR, Math.max(maxR / 6, r));
+		avgR += r;
+		let v = startV.clone();
+		v.rotate(i * Math.PI * 2 / count);
+		let n0 = v.clone().rotate(-controlAngle);
+		let n1 = v.clone().rotate( controlAngle);
+		v.scale(r);
+		n0.scale(r);
+		n1.scale(r);
+		nodes.push(n0, v, n1);
+	}
+	avgR /= count;
+	nodes.push(nodes.shift());
+	nodes.r = maxR;
+	nodes.avgR = avgR;
+	return nodes;
+};
+
+const drawShape = (ctx, nodes, pos, scale, color) => {
+	const s = nodes.map(e => e.clone().scale(scale).add(pos))
+	ctx.beginPath();
+	s.forEach( (n, i) => {
+		let n1 = s[(i + 1) % s.length];
+		let n2 = s[(i + 2) % s.length];
+		let n3 = s[(i + 3) % s.length];
+		if(i % 3 === 0) {
+			ctx.lineTo(n.x, n.y);
+			ctx.bezierCurveTo(n1.x, n1.y, n2.x, n2.y, n3.x, n3.y)
+		}
+	})
+	ctx.fillStyle = color;
+	ctx.fill();
+};
+
+const createIsland = e => {
+	const r = 50 + Math.random() * 200;
+	const shape = generateShape(r);
+	const pos = new Vector(
+		(shadow.width - r * 2) * (Math.random() - 0.5) ,
+		(shadow.height - r * 2) * (Math.random() - 0.5)
+	);
+	return {
+		nodes: shape,
+		maxR: r,
+		avgR: shape.avgR,
+		position: pos,
+	}
+};
+	
+	const drawIslandGradient = (ctx, island) => {
+		console.log(island)
+		let grad = ctx.createRadialGradient(island.position.x, island.position.y, 0, island.position.x, island.position.y, island.maxR);
+		grad.addColorStop(0, 'rgba(255,0,0,1)');
+		grad.addColorStop(0.8, 'rgba(255,0,0, 0.2)');
+		grad.addColorStop(1, 'rgba(255,0,0,0)');
+		drawShape(ctx, island.nodes, island.position, island.maxR / island.avgR, grad);
+		drawShape(ctx, island.nodes, island.position, 1, "rgb(255, 0, 0)");
+	};
+	
+	const drawIslandShallow = (ctx, island) => {
+		drawShape(ctx, island.nodes, island.position, island.maxR / island.avgR, "lightblue");
+	};
+
+	const drawIslandGround = (ctx, island) => {
+		drawShape(ctx, island.nodes, island.position, 1, "khaki");
+		drawShape(ctx, island.nodes, island.position, 0.9, "green");
+		//debug
+		ctx.beginPath();
+		ctx.arc(island.position.x, island.position.y, island.maxR, 0, Math.PI * 2);
+		ctx.closePath();
+		ctx.stroke();
+	};
+	
+	const drawIslandShape = (ctx, island) => {
+		drawShape(ctx, island.nodes, island.position, 1, "rgb(255, 0, 0)");
+	};
+	
+	const islands = (new Array(5)).fill(1).map(s => createIsland());
+	islands.forEach(s => drawIslandGradient(stx, s));
+	islands.forEach(s => drawIslandShape(stx, s));
+	islands.forEach(s => drawIslandShallow(ctx, s));
+	islands.forEach(s => drawIslandGround(ctx, s));
+
+</script>
