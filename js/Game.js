@@ -1,5 +1,6 @@
 class Game {
   constructor() {
+    this.windMeterElement = document.getElementById('wind-meter');
     this.input = new Input(document.getElementById('canvas'));
     this.view = new View({
       cameraAnchor: new Vector(0.5, 0.7),
@@ -59,6 +60,9 @@ class Game {
     this.state.islands.forEach(draw);
     this.state.seamarks.forEach(draw);
     this.state.players.forEach(draw);
+
+    this.windMeterElement.style.transform = `rotate(${this.state.wind.angle -
+      this.state.self.direction.angle}rad)`;
   }
 
   loadState() {
