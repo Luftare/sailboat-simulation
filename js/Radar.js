@@ -23,6 +23,7 @@ class Radar {
 
   draw() {
     this.canvas.width = this.canvas.width;
+    this.ctx.fillStyle = '#b28d47';
     this.samples.forEach((s, i) => {
       const x = this.canvas.width * (i / this.sampleCount);
       const y = s * this.canvas.height;
@@ -32,6 +33,7 @@ class Radar {
     const scale = game.zMap.zToDepth(1);
     const keelY =
       (Math.cos(game.state.self.tiltAngle) * game.state.self.keelDepth) / scale;
+    this.ctx.fillStyle = '#00f2ff';
     this.ctx.fillRect(0, keelY * this.canvas.height, this.canvas.width, 1);
   }
 }
