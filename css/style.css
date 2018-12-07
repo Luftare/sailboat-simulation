@@ -5,6 +5,17 @@ body {
   background-color: #247;
 }
 
+#restart {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: white;
+  background-color: green;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+}
+
 canvas {
   background-color: #aaa;
 }
@@ -17,18 +28,19 @@ canvas {
 #dashboard {
   position: absolute;
   margin: 50px;
+}
+
+#dashboard table {
+  width: 100%;
+}
+
+#dashboard th,
+td {
+  text-align: left;
+}
+
+#speed {
   font-size: 60px;
-}
-
-button {
-  background-color: black;
-  color: white;
-  border: none;
-  padding: 5px;
-}
-
-button:hover {
-  color: red;
 }
 
 .panel {
