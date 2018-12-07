@@ -1,9 +1,9 @@
 class Vector {
   constructor(...args) {
-    if(args.length === 0) {
+    if (args.length === 0) {
       this.x = 0;
       this.y = 0;
-    } else if(args.length === 1){
+    } else if (args.length === 1) {
       this.x = args[0].x;
       this.y = args[0].y;
     } else {
@@ -14,7 +14,7 @@ class Vector {
 
   //getters
   get angle() {
-    return (this.x < 0? Math.PI : 0) + Math.atan(this.y / this.x);
+    return (this.x < 0 ? Math.PI : 0) + Math.atan(this.y / this.x);
   }
 
   get length() {
@@ -26,7 +26,7 @@ class Vector {
   }
 
   get normal() {
-    return (new Vector()).set(this).toNormal();
+    return new Vector().set(this).toNormal();
   }
 
   //setters
@@ -38,7 +38,7 @@ class Vector {
   }
 
   set length(l) {
-    if(this.length === 0) return this.set(l, 0);
+    if (this.length === 0) return this.set(l, 0);
     this.normalize().scale(l);
   }
 
@@ -64,7 +64,7 @@ class Vector {
   }
 
   toObject() {
-    return {x: this.x, y: this.y};
+    return { x: this.x, y: this.y };
   }
 
   toString() {
@@ -72,7 +72,7 @@ class Vector {
   }
 
   set(...args) {
-    if(args.length === 1) {
+    if (args.length === 1) {
       this.x = args[0].x;
       this.y = args[0].y;
     } else {
@@ -93,16 +93,16 @@ class Vector {
     });
     return this;
   }
-	
-	addX(s) {
-		this.x += s;
-		return this;
-	}
-	
-	addY(s) {
-		this.y += s;
-		return this;
-	}
+
+  addX(s) {
+    this.x += s;
+    return this;
+  }
+
+  addY(s) {
+    this.y += s;
+    return this;
+  }
 
   clone() {
     return new Vector(this.x, this.y);
@@ -156,11 +156,11 @@ class Vector {
     return (this.x - v.x) ** 2 + (this.y - v.y) ** 2;
   }
 
-  withinRange(v,r) {
+  withinRange(v, r) {
     return this.distanceSq(v) < r ** 2;
   }
 
-  outsideRange(v,r) {
+  outsideRange(v, r) {
     return this.distanceSq(v) > r ** 2;
   }
 
@@ -231,15 +231,15 @@ class Vector {
   }
 
   crossSign(v) {
-    if(this.isEqual(v)) return 0;
+    if (this.isEqual(v)) return 0;
     const c = this.cross(v);
-    return c >= 0? 1 : -1;
+    return c >= 0 ? 1 : -1;
   }
 
   normalize() {
     const l = this.length;
-    if(l === 0) return this.set(0,0);
-    return this.scale(1/l);
+    if (l === 0) return this.set(0, 0);
+    return this.scale(1 / l);
   }
 
   toLength(l) {
@@ -248,25 +248,25 @@ class Vector {
   }
 
   stretch(l) {
-		let len = this.length;
-		if(len === 0 && l > 0) return this.set(l, 0);
+    let len = this.length;
+    if (len === 0 && l > 0) return this.set(l, 0);
     this.length = Math.max(0, this.length + l);
     return this;
   }
-	
-	shrink(l) {
-		this.length = Math.max(this.length - l, 0);
+
+  shrink(l) {
+    this.length = Math.max(this.length - l, 0);
     return this;
   }
 
   limit(l) {
     const len = this.length;
-    return len > l? this.toLength(l) : this;
+    return len > l ? this.toLength(l) : this;
   }
 
   unlimit(l) {
     const len = this.length;
-    return len < l? this.toLength(l) : this;
+    return len < l ? this.toLength(l) : this;
   }
 
   clampLength(...args) {
@@ -276,16 +276,16 @@ class Vector {
   }
 
   clampAngle(a, v) {
-    if(a >= Math.PI) return this;
-    if(v) {
+    if (a >= Math.PI) return this;
+    if (v) {
       const oldAngle = this.angleBetween(v);
-      return oldAngle > a? this.lerpAlign(oldAngle - a, v) : this;
+      return oldAngle > a ? this.lerpAlign(oldAngle - a, v) : this;
     } else {
       const oldAngle = this.angle;
-      if(oldAngle > 0){
-        return oldAngle < a? this : this.toAngle(a);
+      if (oldAngle > 0) {
+        return oldAngle < a ? this : this.toAngle(a);
       } else {
-        return oldAngle > -a? this : this.toAngle(-a);
+        return oldAngle > -a ? this : this.toAngle(-a);
       }
     }
   }
@@ -304,14 +304,14 @@ class Vector {
   }
 
   zero() {
-    return this.set(0,0);
+    return this.set(0, 0);
   }
 
   toNormal(dir = false) {
-    if(dir){
-      return this.set(this.y,this.x).mirror();
+    if (dir) {
+      return this.set(this.y, this.x).mirror();
     } else {
-      return this.set(this.y,this.x);
+      return this.set(this.y, this.x);
     }
   }
 
@@ -328,22 +328,22 @@ class Vector {
     const l = this.length;
     const s = Math.sin(a);
     const c = Math.cos(a);
-    const nX = this.x*c - this.y*s;
-    const nY = this.x*s + this.y*c;
-    return this.set(nX,nY).toLength(l);
+    const nX = this.x * c - this.y * s;
+    const nY = this.x * s + this.y * c;
+    return this.set(nX, nY).toLength(l);
   }
 
   lerpAlign(da, v) {
     const sign = this.crossSign(v);
     this.rotate(da * sign);
     const newSign = this.crossSign(v);
-    return sign !== newSign? this.alignWith(v) : this;
+    return sign !== newSign ? this.alignWith(v) : this;
   }
 
   lerpAlignFixed(da, CW, v) {
     const sign = this.crossSign(v);
-    this.rotate(da * (CW? 1 : -1));
+    this.rotate(da * (CW ? 1 : -1));
     const newSign = this.crossSign(v);
-    return sign !== newSign? this.alignWith(v) : this;
+    return sign !== newSign ? this.alignWith(v) : this;
   }
 }

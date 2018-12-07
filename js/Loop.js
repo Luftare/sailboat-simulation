@@ -1,5 +1,10 @@
 class Loop {
-  constructor({dt = 1000 / 60, animationFrame = false, onTick = function(){}, autoStart = false}){
+  constructor({
+    dt = 1000 / 60,
+    animationFrame = false,
+    onTick = function() {},
+    autoStart = false,
+  }) {
     this.then = 0;
     this.running = false;
     this.targetDt = dt;
@@ -7,7 +12,7 @@ class Loop {
     this.lastDt = 0;
     this.loopId = 0;
     this.animationFrame = animationFrame;
-    if(autoStart) this.start();
+    if (autoStart) this.start();
   }
 
   get dt() {
@@ -23,7 +28,7 @@ class Loop {
   }
 
   set FPS(val) {
-    this.targetDt = 1000/val;
+    this.targetDt = 1000 / val;
   }
 
   tick() {
@@ -33,17 +38,17 @@ class Loop {
 
     this.onTick(this.lastDt);
 
-    if(this.running){
-      if(this.animationFrame){
+    if (this.running) {
+      if (this.animationFrame) {
         this.loopId = requestAnimationFrame(this.tick.bind(this));
       } else {
-        this.loopId = setTimeout(this.tick.bind(this), this.targetDt)
+        this.loopId = setTimeout(this.tick.bind(this), this.targetDt);
       }
     }
   }
 
   start() {
-    if(this.running) return;
+    if (this.running) return;
     this.running = true;
     this.then = Date.now() - this.targetDt;
     this.tick();
@@ -52,7 +57,7 @@ class Loop {
 
   stop() {
     this.running = false;
-    if(this.animationFrame){
+    if (this.animationFrame) {
       cancelAnimationFrame(this.loopId);
     } else {
       clearTimeout(this.loopId);
