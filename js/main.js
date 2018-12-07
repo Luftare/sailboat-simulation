@@ -1,6 +1,9 @@
 var game = new Game();
 
-window.onload = () => game.start();
+window.onload = () => {
+  document.body.hidden = false;
+  game.start();
+};
 
 document.getElementById('restart').onclick = () => {
   game.loop.stop();

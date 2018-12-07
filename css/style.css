@@ -1,6 +1,8 @@
-html, body {
+html,
+body {
   padding: 0;
   margin: 0;
+  background-color: #247;
 }
 
 canvas {
@@ -9,7 +11,7 @@ canvas {
 
 #canvas {
   position: absolute;
-  background-color: #8CE;
+  background-color: #8ce;
 }
 
 #dashboard {
