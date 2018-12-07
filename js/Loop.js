@@ -35,7 +35,7 @@ class Loop {
     const now = Date.now();
     this.lastDt = now - this.then;
     this.then = now;
-
+    const dt = Math.min(this.lastDt, 25);
     this.onTick(this.lastDt);
 
     if (this.running) {

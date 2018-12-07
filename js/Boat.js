@@ -246,10 +246,12 @@ class Boat {
       this.rudderAngle *= 0.9;
 
     const zoomSpeed = 0.95;
-    if (game.input.keys.z && game.view.camera.zoom > 0.1) {
+
+    if (game.input.keys.z && game.view.camera.zoom > 0.07) {
       game.view.camera.zoom *= zoomSpeed;
       game.view.camera.height *= 1 / zoomSpeed;
     }
+
     if (game.input.keys.x && game.view.camera.zoom < 3) {
       game.view.camera.zoom *= 1 / zoomSpeed;
       game.view.camera.height *= zoomSpeed;
@@ -349,6 +351,7 @@ class Boat {
 
     //sail
     ctx.beginPath();
+    ctx.lineCap = 'round';
     ctx.moveTo(this.position.x, this.position.y);
     ctx.lineTo(sailEnd.x, sailEnd.y);
     ctx.closePath();
@@ -367,6 +370,7 @@ class Boat {
 
     //mast
     ctx.beginPath();
+    ctx.lineCap = 'round';
     ctx.moveTo(this.position.x, this.position.y);
     ctx.lineTo(tip.x, tip.y);
     ctx.closePath();
